@@ -49,14 +49,14 @@ const createCourse = async (req, res) => {
     });
   } catch (err) {
     console.log(err);
-    return res.status(200).json({ msg: "Internal server error", code: 500 });
+    return res.status(200).json({ msg: "Internal server error", code: 600 });
   }
 };
 
 const editeCourse = async (req, res) => {
   try {
     let { course_id, quizzes, title, description } = req.body;
-    const video = req.files.video;
+    const video = req.files?.video;
     quizzes = JSON.parse(quizzes);
     if (!quizzes || !title || !description) {
       return res
@@ -101,6 +101,7 @@ const editeCourse = async (req, res) => {
             getCourse.videos = [result?.secure_url];
             getCourse.quizzes = quizzes;
             getCourse.save();
+            return res.status(200).json({ msg: "success", code: 200 });
           }
         }
       );
@@ -110,10 +111,11 @@ const editeCourse = async (req, res) => {
       getCourse.description = description;
       getCourse.quizzes = quizzes;
       await getCourse.save();
+      return res.status(200).json({ msg: "success", code: 200 });
     }
-    return res.status(200).json({ msg: "success", code: 200 });
   } catch (err) {
-    return res.status(200).json({ msg: "Internal server error!", code: 500 });
+    console.log(err);
+    return res.status(200).json({ msg: "Internal server error!", code: 600 });
   }
 };
 
@@ -122,7 +124,7 @@ const getCourse = async (req, res) => {
     const courses = await courseModel.find({ instructor: req?.userId });
     return res.status(200).json({ msg: "", data: courses, code: 200 });
   } catch (err) {
-    return res.status(200).json({ msg: "Internal server error", code: 500 });
+    return res.status(200).json({ msg: "Internal server error", code: 600 });
   }
 };
 
@@ -139,7 +141,7 @@ const deleteCourse = async (req, res) => {
     await courseModel.findByIdAndDelete({ _id: course_id });
     return res.status(200).json({ msg: "seccuss delete", code: 200 });
   } catch (err) {
-    return res.status(200).json({ msg: "Internal server error", code: 500 });
+    return res.status(200).json({ msg: "Internal server error", code: 600 });
   }
 };
 
